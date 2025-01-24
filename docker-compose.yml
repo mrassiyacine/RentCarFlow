@@ -1,0 +1,48 @@
+networks:
+  rentcarflow-network:
+    driver: bridge
+services:
+  rentcar-db:
+    image: postgres:latest
+    container_name: postgres_rentcar
+    networks:
+      - rentcarflow-network
+    environment:
+      POSTGRES_USER: $POSTGRES_RENTCAR_USER
+      POSTGRES_PASSWORD: $POSTGRES_RENTCAR_PASSWORD
+      POSTGRES_DB: $POSTGRES_RENTCAR_DB
+    ports:
+      - "5432:5432"
+    volumes:
+      - rentcar_data:/var/lib/postgresql/data
+      - ./RentCar_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  mileage-db:
+    image: postgres:latest
+    container_name: postgres_mileage
+    networks:
+      - rentcarflow-network
+    environment:
+      POSTGRES_USER: $POSTGRES_MILEAGE_USER
+      POSTGRES_PASSWORD: $POSTGRES_MILEAGE_PASSWORD
+      POSTGRES_DB: $POSTGRES_MILEAGE_DB
+    ports:
+      - "5433:5432"
+    volumes:
+      - mileage_data:/var/lib/postgresql/data
+      - ./Mileage_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+
+volumes:
+  rentcar_data:
+  mileage_data:
