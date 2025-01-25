@@ -4,4 +4,5 @@ CREATE TABLE IF NOT EXISTS daily_mileage (
     daily_km INTEGER NOT NULL,
     recorded_at DATE DEFAULT CURRENT_DATE,
     PRIMARY KEY (car_id, recorded_at)
+
 );
