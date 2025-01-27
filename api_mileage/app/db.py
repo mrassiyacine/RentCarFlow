@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import date
 
 from dotenv import load_dotenv
 from sqlalchemy import Date, Integer, create_engine, func
@@ -26,7 +27,7 @@ class DailyMileage(Base):
     mileage_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     car_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     daily_km: Mapped[int] = mapped_column(Integer, nullable=False)
-    recorded_at: Mapped[str] = mapped_column(
+    recorded_at: Mapped[date] = mapped_column(
         Date, server_default=func.current_date(), primary_key=True
     )
 

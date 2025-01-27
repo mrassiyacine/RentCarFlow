@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 from typing import List
 
@@ -30,6 +31,22 @@ def get_mileage_by_car(car_id: int, db: Session = Depends(get_db_connection)):
     if not mileage_records:
         raise HTTPException(
             status_code=404, detail=f"No mileage records found for car_id {car_id}"
+        )
+    return mileage_records
+
+
+@router.get("/mileage/date/{recorded_at}", response_model=list[DailyMileageResponse])
+def get_mileage_by_date(recorded_at: date, db: Session = Depends(get_db_connection)):
+    """
+    Returns all mileage records for a specific date.
+    """
+    logging.info(f"Type of recorded_at: {type(recorded_at)}")
+    mileage_records = (
+        db.query(DailyMileage).filter(DailyMileage.recorded_at == recorded_at).all()
+    )
+    if not mileage_records:
+        raise HTTPException(
+            status_code=404, detail=f"No mileage records found for {recorded_at}"
         )
     return mileage_records
 

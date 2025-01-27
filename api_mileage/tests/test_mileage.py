@@ -50,10 +50,13 @@ class TestMileageAPI(unittest.TestCase):
                 mileage_id=1, car_id=1, daily_km=100, recorded_at=date(2025, 1, 1)
             ),
             DailyMileage(
-                mileage_id=2, car_id=2, daily_km=150, recorded_at=date(2025, 1, 2)
+                mileage_id=2, car_id=2, daily_km=100, recorded_at=date(2025, 1, 1)
             ),
             DailyMileage(
-                mileage_id=3, car_id=3, daily_km=200, recorded_at=date(2025, 1, 3)
+                mileage_id=3, car_id=2, daily_km=150, recorded_at=date(2025, 1, 2)
+            ),
+            DailyMileage(
+                mileage_id=4, car_id=3, daily_km=200, recorded_at=date(2025, 1, 3)
             ),
         ]
         db.add_all(test_data)
@@ -72,7 +75,7 @@ class TestMileageAPI(unittest.TestCase):
         response = client.get("/mileage/")
         self.assertEqual(response.status_code, 200)
         data = response.json()
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 4)
 
     def test_get_mileage_by_car(self):
         """Test get mileage records by car"""
@@ -81,6 +84,14 @@ class TestMileageAPI(unittest.TestCase):
         data = response.json()
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["car_id"], 1)
+
+    def test_get_mileage_by_date(self):
+        """Test get mileage records by date"""
+        response = client.get("/mileage/date/2025-01-01")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["recorded_at"], "2025-01-01")
 
     def test_get_mileage_by_car_and_date(self):
         """Test get mileage records by car and date"""

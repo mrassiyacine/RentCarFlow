@@ -40,8 +40,23 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-
+  api_mileage:
+    build:
+      context: ./api_mileage
+      dockerfile: Dockerfile
+    container_name: api_mileage
+    networks:
+      - rentcarflow-network
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mileage-db
+    environment:
+      POSTGRES_MILEAGE_USER: $POSTGRES_MILEAGE_USER
+      POSTGRES_MILEAGE_PASSWORD: $POSTGRES_MILEAGE_PASSWORD
+      POSTGRES_MILEAGE_DB: $POSTGRES_MILEAGE_DB
+      POSTGRES_MILEAGE_PORT: 5432
+      POSTGRES_MILEAGE_HOST: mileage-db
 
 volumes:
   rentcar_data:
